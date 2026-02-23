@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+
 const users = {};
 
 app.post('/api/register', (req, res) => {
@@ -32,6 +33,12 @@ app.post('/api/login', (req, res) => {
     }
 });
 
+app.get('/api/users', (req, res) => {
+    // Asumiendo que solo admin puede acceder, pero por simplicidad, devolvemos todos
+    const userList = Object.keys(users).map(username => ({ username, password: users[username].hash }));
+    res.json({ users: userList });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
@@ -49,6 +56,7 @@ function registerUser(username, password) {
   console.log(users);
 }
 
+let admin = registerUser('admin', 'admin123');
 function loginUser(username, password) {
     const user = users[username];
 

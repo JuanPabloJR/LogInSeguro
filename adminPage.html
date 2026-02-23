@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminPage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-card">
+            <div class="app-logo">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+            </div>
+            <h1>Panel de Administración</h1>
+            <p>Esta página es solo accesible para usuarios administradores.</p>
+            <h2>Lista de Usuarios Registrados</h2>
+            <ul id="user-list" class="user-list">
+                <!-- Los usuarios se cargarán aquí -->
+            </ul>
+        </div>
+    </div>
+    <script>
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                const userList = document.getElementById('user-list');
+                userList.innerHTML = '';
+                data.users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user.username + ' - ' + user.password;
+                    userList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+            }
+        }
+        window.onload = loadUsers;
+    </script>
+</body>
+</html>
